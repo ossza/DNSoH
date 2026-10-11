@@ -23,7 +23,7 @@
   </string>
 
   <string name="intro_details_body" description="Body text for intro page describing permissions and privacy">
-    Tap Accept to route your DNS queries through OSS Secure DNS. You will need an active subscription path ID from the customer portal.\n\nThis is a DNS-over-HTTPS service, not a full VPN. Only DNS traffic is protected.
+    Tap Accept to route your DNS queries through OSS Secure DNS. You will need an active subscription path ID from the customer portal.\n\nThis is a DNS-over-HTTPS service, not a VPN. DNS Traffic is protected.
   </string>
 
   <string name="intro_back" description="Button label to see the previous page of introduction">
@@ -101,7 +101,7 @@
 
   <string name="explanation_exposed"
           description="Expanded form of status_exposed">
-    Your DNS queries are not protected.
+    Your DNS queries are not protected. Enter your path ID in Settings.
   </string>
 
   <string name="status_protected"
@@ -323,7 +323,7 @@
   <string name="server_choice_key" translatable="false">pref_server_url</string>
 
   <string name="server_choice" description="Title of the setting to choose your server">
-    OSS Secure DNS Path ID
+    Path ID
   </string>
 
   <string name="server_choice_summary"
@@ -396,7 +396,7 @@
 
   <string name="notification_content"
           description="Indicates what will happen if the user taps the notification.">
-    Tap to open OSS Secure DNS
+    Key appears at the top of your screen when DNSoH is active
   </string>
 
   <string name="channel_name"
