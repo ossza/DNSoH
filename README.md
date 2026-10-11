@@ -8,9 +8,9 @@ This app is a branded fork of [Intra](https://github.com/Jigsaw-Code/Intra) (Apa
 
 - **Local South African resolver** with strong privacy and filtering
 - **Blocking policy**:
-  - All pornographic sites
   - Domains on published public blocklists (malware, ads, trackers, phishing, etc.)
-  - Additional domains on the local OSS customer blocklist
+  - All pornographic sites, as per published blocklists
+  - Additional domains on the local OSS blocklist, per customer request
 - **Token-gated** — one token per subscription instance
 - **Plans**: Standard, Family, Business (fair-use limits on source IPs and query rate)
 - **DoH endpoint pattern**: `https://dns1.oss.co.za/<bare-32-hex-path-id>`
