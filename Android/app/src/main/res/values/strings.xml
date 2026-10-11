@@ -109,6 +109,9 @@
     Protected
   </string>
 
+  <string name="status_not_configured">Not configured</string>
+  <string name="explanation_not_configured">Enter your path ID in Settings to activate OSS Secure DNS.</string>
+
   <string name="explanation_protected"
           description="Expanded form of status_protected">
     Your DNS queries are protected by OSS Secure DNS.
