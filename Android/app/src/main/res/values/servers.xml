@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- OSS Secure DNS only — single provider for the branded client. -->
+  <string name="legacy_domain0" translatable="false">dns1.oss.co.za</string>
   <string name="url0" translatable="false">https://dns1.oss.co.za/dns-query</string>
   <string name="name0" translatable="false">OSS Secure DNS</string>
   <string name="ips0" translatable="false"></string>
   <string name="description0" description="Describes the OSS Secure DNS resolver. [CHAR_LIMIT=NONE]">
-    Local South African Secure DNS with privacy and filtering. Requires an active subscription token in the portal.
+    Local South African Secure DNS. Blocks porn, published blocklists, and the local OSS customer list. Requires an active subscription path ID.
   </string>
   <string name="website0" translatable="false">https://portal.oss.co.za/</string>
+
+  <!-- Single-item arrays so the server chooser only offers OSS -->
+  <string-array name="urls">
+    <item>@string/url0</item>
+  </string-array>
+  <string-array name="names">
+    <item>@string/name0</item>
+  </string-array>
+  <string-array name="descriptions">
+    <item>@string/description0</item>
+  </string-array>
+  <string-array name="ips">
+    <item>@string/ips0</item>
+  </string-array>
+  <string-array name="server_websites">
+    <item>@string/website0</item>
+  </string-array>
 </resources>
