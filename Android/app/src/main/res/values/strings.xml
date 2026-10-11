@@ -326,7 +326,7 @@
   <string name="server_choice_key" translatable="false">pref_server_url</string>
 
   <string name="server_choice" description="Title of the setting to choose your server">
-    Path ID
+    Secure DNS settings
   </string>
 
   <string name="server_choice_summary"
