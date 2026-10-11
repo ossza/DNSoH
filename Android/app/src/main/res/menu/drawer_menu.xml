@@ -15,7 +15,4 @@
   <item
       android:id="@+id/tos"
       android:title="@string/tos_link"/>
-  <item
-      android:id="@+id/source_code"
-      android:title="@string/source_code"/>
 </menu>
