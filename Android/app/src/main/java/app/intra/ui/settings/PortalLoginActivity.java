@@ -3,131 +3,86 @@ package app.intra.ui.settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.webkit.CookieManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import app.intra.R;
 
+/**
+ * Loads the portal in a WebView so Cloudflare Turnstile can complete.
+ * After login the portal stores the JWT in localStorage as portal_token.
+ * We inject JS to read it, call /api/v1/tokens, and return the first 32-hex path ID.
+ */
 public class PortalLoginActivity extends AppCompatActivity {
 
   public static final String EXTRA_PATH_ID = "path_id";
-  private static final String LOGIN_URL = "https://portal.oss.co.za/api/v1/login";
-  private static final String TOKENS_URL = "https://portal.oss.co.za/api/v1/tokens";
-
-  private EditText emailField;
-  private EditText passwordField;
-  private TextView statusView;
-  private Button loginButton;
+  private static final String PORTAL_URL = "https://portal.oss.co.za/";
+  private WebView webView;
+  private boolean extracted = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_portal_login);
 
-    emailField = findViewById(R.id.email);
-    passwordField = findViewById(R.id.password);
-    statusView = findViewById(R.id.status);
-    loginButton = findViewById(R.id.login_button);
+    webView = findViewById(R.id.webview);
+    webView.getSettings().setJavaScriptEnabled(true);
+    webView.getSettings().setDomStorageEnabled(true);
+    webView.addJavascriptInterface(new PortalBridge(), "AndroidBridge");
+    CookieManager.getInstance().setAcceptCookie(true);
+    CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
 
-    loginButton.setOnClickListener(v -> doLogin());
-  }
-
-  private void doLogin() {
-    final String email = emailField.getText().toString().trim();
-    final String password = passwordField.getText().toString();
-    if (email.isEmpty() || password.isEmpty()) {
-      statusView.setText("Enter email and password.");
-      return;
-    }
-    loginButton.setEnabled(false);
-    statusView.setText("Logging in...");
-
-    new Thread(() -> {
-      try {
-        String jwt = login(email, password);
-        String pathId = fetchPathId(jwt);
-        new Handler(Looper.getMainLooper()).post(() -> {
-          Intent result = new Intent();
-          result.putExtra(EXTRA_PATH_ID, pathId);
-          setResult(Activity.RESULT_OK, result);
-          Toast.makeText(this, "Path ID loaded", Toast.LENGTH_SHORT).show();
-          finish();
-        });
-      } catch (Exception e) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-          statusView.setText("Error: " + e.getMessage());
-          loginButton.setEnabled(true);
-        });
+    webView.setWebViewClient(new WebViewClient() {
+      @Override
+      public void onPageFinished(WebView view, String url) {
+        // After any page load, try to extract the path ID if the user is logged in.
+        if (!extracted) {
+          view.evaluateJavascript(EXTRACT_JS, null);
+        }
       }
-    }).start();
+    });
+    webView.setWebChromeClient(new WebChromeClient());
+    webView.loadUrl(PORTAL_URL);
   }
 
-  private String login(String email, String password) throws Exception {
-    URL url = new URL(LOGIN_URL);
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-    String body = "{\"email\":\"" + escape(email) + "\",\"password\":\"" + escape(password) + "\"}";
-    try (OutputStream os = conn.getOutputStream()) {
-      os.write(body.getBytes(StandardCharsets.UTF_8));
-    }
-    int code = conn.getResponseCode();
-    String response = read(conn);
-    if (code != 200) {
-      throw new Exception("Login failed (" + code + "): " + response);
-    }
-    // Look for access_token or token field
-    Pattern p = Pattern.compile("access_token|token");
-    Matcher m = Pattern.compile("\"(access_token|token)\"\\s*:\\s*\"([^\"]+)\"").matcher(response);
-    if (!m.find()) {
-      throw new Exception("No token in login response");
-    }
-    return m.group(2);
-  }
+  // JS: if portal_token exists, fetch /api/v1/tokens and call AndroidBridge.onPathId(...)
+  private static final String EXTRACT_JS =
+      "(function(){" +
+      "  try {" +
+      "    var t = localStorage.getItem('portal_token');" +
+      "    if (!t) return;" +
+      "    fetch('/api/v1/tokens', {headers:{'Authorization':'Bearer '+t}})" +
+      "      .then(function(r){return r.json();})" +
+      "      .then(function(data){" +
+      "        var id = null;" +
+      "        var arr = data.tokens || data;" +
+      "        if (Array.isArray(arr)) {" +
+      "          for (var i=0;i<arr.length;i++) {" +
+      "            var tok = arr[i].token || arr[i].path_id || arr[i];" +
+      "            if (typeof tok === 'string' && /^[0-9a-fA-F]{32}$/.test(tok)) { id = tok; break; }" +
+      "          }" +
+      "        }" +
+      "        if (id) AndroidBridge.onPathId(id);" +
+      "      }).catch(function(){});" +
+      "  } catch(e) {}" +
+      "})();";
 
-  private String fetchPathId(String jwt) throws Exception {
-    URL url = new URL(TOKENS_URL);
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("GET");
-    conn.setRequestProperty("Authorization", "Bearer " + jwt);
-    int code = conn.getResponseCode();
-    String response = read(conn);
-    if (code != 200) {
-      throw new Exception("Tokens failed (" + code + "): " + response);
+  private class PortalBridge {
+    @JavascriptInterface
+    public void onPathId(String pathId) {
+      if (extracted) return;
+      extracted = true;
+      runOnUiThread(() -> {
+        Intent result = new Intent();
+        result.putExtra(EXTRA_PATH_ID, pathId);
+        setResult(Activity.RESULT_OK, result);
+        Toast.makeText(PortalLoginActivity.this, "Path ID loaded", Toast.LENGTH_SHORT).show();
+        finish();
+      });
     }
-    // Look for 32-hex token / path_id
-    Matcher m = Pattern.compile("\"(token|path_id|pathId)\"\\s*:\\s*\"([0-9a-fA-F]{32})\"").matcher(response);
-    if (!m.find()) {
-      throw new Exception("No path ID found in response");
-    }
-    return m.group(2);
-  }
-
-  private String read(HttpURLConnection conn) throws Exception {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(
-        conn.getErrorStream() != null && conn.getResponseCode() >= 400
-            ? conn.getErrorStream() : conn.getInputStream()));
-    StringBuilder sb = new StringBuilder();
-    String line;
-    while ((line = reader.readLine()) != null) sb.append(line);
-    reader.close();
-    return sb.toString();
-  }
-
-  private String escape(String s) {
-    return s.replace("\\", "\\\\").replace("\"", "\\\"");
   }
 }
