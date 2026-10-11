@@ -1,22 +1,37 @@
-# OSS DNSoH Android client
-[![Build Status](https://travis-ci.org/Jigsaw-Code/Intra.svg?branch=master)](https://travis-ci.org/Jigsaw-Code/Intra)
+# OSS Secure DNS Android Client
 
-Intra is an experimental tool that allows you to test new DNS-over-HTTPS
-services that encrypt domain name lookups and prevent manipulation by your
-network. It currently supports services from Cloudflare and Google, and
-additional options may be added over time.  You can get it from the
-Google Play Store [here](https://play.google.com/store/apps/details?id=app.intra).
+Android client for **OSS Secure DNS** — a privacy-focused, token-gated DNS-over-HTTPS (DoH) service operated by OSS Technologies in South Africa.
 
-Features:
-* Built-in support for public DNS services from Cloudflare and Google
-* Visualization of server performance and application query behavior
-* Geocoding of query results to compare against expected regional results
+This app is a branded fork of [Intra](https://github.com/Jigsaw-Code/Intra) (Apache 2.0). It intercepts DNS queries via Android’s VpnService and sends them encrypted to the OSS Secure DNS resolver. Only DNS traffic is tunnelled; all other traffic remains normal.
 
-## Android build instructions
+## OSS Secure DNS
+
+- **Local South African resolver** with privacy and filtering (malware, ads, and optional blocklists)
+- **Token-gated** — one token per subscription instance
+- **Plans**: Standard, Family, Business (fair-use limits on source IPs and query rate)
+- **DoH endpoint pattern**: `https://dns1.oss.co.za/<bare-32-hex-path-id>`
+- Customer portal: [https://portal.oss.co.za](https://portal.oss.co.za)
+
+Log into the portal, open your Secure DNS subscription, and copy the **DoH path ID** (bare 32-character hex, no `token_` prefix). The app can also log into the portal for you and fetch the path ID automatically.
+
+## Features of this client
+
+- Hardened for OSS Secure DNS only (no public resolvers)
+- Simple path-ID entry or one-tap portal login
+- Uses the OSS Technologies logo and branding
+- Built-in query history and performance visualisation (inherited from Intra)
+- App exclusion list for compatibility
+
+## Building
 
 1. Clone this repo.
-2. Open the `Android/` directory in Android Studio 3.2 or later.
-3. Connect your phone
-4. Click the green "play" triangle button.
+2. Open the `Android/` directory in Android Studio (3.2 or later recommended).
+3. Place the OSS logo as `Android/app/src/main/res/drawable/oss_logo.png` (or vector).
+4. Connect a device or start an emulator.
+5. Build and run.
 
-<!-- write-test -->
+## Licence
+
+This project is based on Intra by Jigsaw Operations LLC and is distributed under the Apache License 2.0. See the original [LICENSE](LICENSE) file.
+
+OSS Technologies — https://oss.co.za
