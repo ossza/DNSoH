@@ -99,7 +99,7 @@ public class ServerChooserFragment extends PreferenceDialogFragmentCompat
     private void updateUI() {
         int checkedId = buttons.getCheckedRadioButtonId();
         boolean custom = checkedId == R.id.pref_server_custom;
-        customServerUrl.setEnabled(custom);
+        customServerUrl.setEnabled(true);
         spinner.setEnabled(!custom);
         description.setEnabled(!custom);
         serverWebsite.setEnabled(!custom);
@@ -216,7 +216,7 @@ public class ServerChooserFragment extends PreferenceDialogFragmentCompat
         String expanded = PersistentState.expandUrl(getContext(), url);
         int index = Arrays.asList(urls).indexOf(expanded);
         if (index >= 0) {
-            buttons.check(R.id.pref_server_builtin);
+            buttons.check(R.id.pref_server_custom);
             spinner.setSelection(index);
             onBuiltinServerSelected(index);
         } else {

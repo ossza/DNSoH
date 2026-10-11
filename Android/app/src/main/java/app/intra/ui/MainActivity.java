@@ -222,13 +222,13 @@ public class MainActivity extends AppCompatActivity
           chooseView(R.id.settings);
           return true;
         } else if (itemId == R.id.support) {
-          openUrl("https://support.getintra.org/");
+          openUrl("https://oss.co.za/support");
           return true;
         } else if (itemId == R.id.privacy) {
-          openUrl("https://getintra.org/privacy");
+          openUrl("https://oss.co.za/privacy");
           return true;
         } else if (itemId == R.id.tos) {
-          openUrl("https://policies.google.com/terms");
+          openUrl("https://oss.co.za/terms");
           return true;
         } else if (itemId == R.id.source_code) {
           openUrl("https://github.com/Jigsaw-Code/intra");
