@@ -52,7 +52,7 @@ public class PortalLoginActivity extends AppCompatActivity {
       return;
     }
     loginButton.setEnabled(false);
-    statusView.setText("Logging in…");
+    statusView.setText("Logging in...");
 
     new Thread(() -> {
       try {
@@ -89,12 +89,13 @@ public class PortalLoginActivity extends AppCompatActivity {
     if (code != 200) {
       throw new Exception("Login failed (" + code + "): " + response);
     }
-    // Expect {"access_token":"eyJ..."} or similar
-    Matcher m = Pattern.compile("\"(?:access_token|token)\"\s*:\s*\"([^\"]+)\"").matcher(response);
+    // Look for access_token or token field
+    Pattern p = Pattern.compile("access_token|token");
+    Matcher m = Pattern.compile("\"(access_token|token)\"\\s*:\\s*\"([^\"]+)\"").matcher(response);
     if (!m.find()) {
       throw new Exception("No token in login response");
     }
-    return m.group(1);
+    return m.group(2);
   }
 
   private String fetchPathId(String jwt) throws Exception {
@@ -107,12 +108,12 @@ public class PortalLoginActivity extends AppCompatActivity {
     if (code != 200) {
       throw new Exception("Tokens failed (" + code + "): " + response);
     }
-    // Look for a 32-hex path ID / token field
-    Matcher m = Pattern.compile("\"(?:token|path_id|pathId)\"\s*:\s*\"([0-9a-fA-F]{32})\"").matcher(response);
+    // Look for 32-hex token / path_id
+    Matcher m = Pattern.compile("\"(token|path_id|pathId)\"\\s*:\\s*\"([0-9a-fA-F]{32})\"").matcher(response);
     if (!m.find()) {
       throw new Exception("No path ID found in response");
     }
-    return m.group(1);
+    return m.group(2);
   }
 
   private String read(HttpURLConnection conn) throws Exception {
