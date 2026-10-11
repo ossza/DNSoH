@@ -6,13 +6,29 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="24dp"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="app.intra.ui.MainActivity">
 
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:paddingBottom="16dp">
+      android:layout_height="wrap_content">
+
+    <!-- Hidden: graph backdrop (ID kept for Java) -->
+    <ImageView
+        android:id="@+id/graph_backdrop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:adjustViewBounds="true"
+        android:alpha="0.4"
+        android:scaleType="fitXY"
+        android:src="@drawable/gradient_backdrop"
+        app:tint="@color/accent_good"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"/>
 
     <TextView
             android:id="@+id/indicator"
@@ -32,10 +48,11 @@
             android:id="@+id/dns_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="32dp"
             android:scaleX="1.3"
             android:scaleY="1.3"
             app:layout_constraintTop_toTopOf="@id/indicator"
+            app:layout_constraintStart_toEndOf="@id/indicator"
             app:layout_constraintBottom_toBottomOf="@id/indicator"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -66,6 +83,35 @@
             tools:text="@string/explanation_protected"
             android:textColor="@color/indicator"/>
 
+    <!-- Hidden: try-all button (ID kept) -->
+    <Button
+        android:id="@+id/try_all_servers_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/try_all_servers"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/dns_switch"
+        app:layout_constraintStart_toStartOf="@id/status"
+        app:layout_constraintTop_toBottomOf="@id/explanation"/>
+
+    <!-- Hidden: query graph (ID kept) -->
+    <app.intra.ui.HistoryGraph
+            android:id="@+id/graph"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
   </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <!-- Hidden: system details and history (IDs kept so Java does not crash) -->
+  <include layout="@layout/system_details" android:visibility="gone"/>
+
+  <CheckBox
+      android:id="@+id/show_history"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:checked="false"
+      android:text="@string/show_history"/>
 
 </LinearLayout>
