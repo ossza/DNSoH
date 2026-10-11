@@ -9,21 +9,4 @@
     Local South African Secure DNS. Blocks porn, published blocklists, and the local OSS customer list. Requires an active subscription path ID.
   </string>
   <string name="website0" translatable="false">https://portal.oss.co.za/</string>
-
-  <!-- Single-item arrays so the server chooser only offers OSS -->
-  <string-array name="urls">
-    <item>@string/url0</item>
-  </string-array>
-  <string-array name="names">
-    <item>@string/name0</item>
-  </string-array>
-  <string-array name="descriptions">
-    <item>@string/description0</item>
-  </string-array>
-  <string-array name="ips">
-    <item>@string/ips0</item>
-  </string-array>
-  <string-array name="server_websites">
-    <item>@string/website0</item>
-  </string-array>
 </resources>
