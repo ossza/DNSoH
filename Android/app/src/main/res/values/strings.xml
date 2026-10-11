@@ -15,7 +15,7 @@
   </string>
 
   <string name="intro_manipulation_body" description="Body text for intro page describing manipulation">
-    Your DNS queries are sent encrypted to the OSS Secure DNS resolver in South Africa.\n\nThis protects your lookups from being observed or modified on the network.
+    Your DNS queries are sent to the OSS Secure DNS resolvers in South Africa.\n\nThis protects your lookups from being observed or modified on the network.
   </string>
 
   <string name="intro_details_headline" description="Headline for intro page describing permissions and privacy">
