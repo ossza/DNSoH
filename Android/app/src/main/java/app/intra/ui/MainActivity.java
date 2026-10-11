@@ -230,9 +230,6 @@ public class MainActivity extends AppCompatActivity
         } else if (itemId == R.id.tos) {
           openUrl("https://oss.co.za/terms");
           return true;
-        } else if (itemId == R.id.source_code) {
-          openUrl("https://github.com/Jigsaw-Code/intra");
-          return true;
         }
         return false;
       }
