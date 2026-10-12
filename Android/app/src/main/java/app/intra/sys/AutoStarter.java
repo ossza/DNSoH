@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.net.VpnService;
 import android.util.Log;
 import app.intra.sys.firebase.LogWrapper;
-import app.intra.sys.firebase.RemoteConfig;
 import app.intra.ui.MainActivity;
 
 /**
@@ -32,24 +31,29 @@ public class AutoStarter extends BroadcastReceiver {
 
   @Override
   public void onReceive(final Context context, Intent intent) {
-    if (!Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-      return;
-    }
-    LogWrapper.log(Log.DEBUG, LOG_TAG, "Boot event");
+    String action = intent.getAction();
+    if (action == null) return;
+    // Accept standard boot and common OEM quick-boot events (Huawei, HTC, etc.)
+    boolean boot = Intent.ACTION_BOOT_COMPLETED.equals(action)
+        || Intent.ACTION_LOCKED_BOOT_COMPLETED.equals(action)
+        || "android.intent.action.QUICKBOOT_POWERON".equals(action)
+        || "com.htc.intent.action.QUICKBOOT_POWERON".equals(action);
+    if (!boot) return;
+
+    LogWrapper.log(Log.DEBUG, LOG_TAG, "Boot event: " + action);
     final VpnController controller = VpnController.getInstance();
     VpnState state = controller.getState(context);
     if (state.activationRequested && !state.on) {
       LogWrapper.log(Log.DEBUG, LOG_TAG, "Autostart enabled");
       if (VpnService.prepare(context) != null) {
-        // prepare() returns a non-null intent if VPN permission has not been granted.
-        LogWrapper.log(Log.WARN, LOG_TAG, "VPN permission not granted.  Starting UI.");
+        LogWrapper.log(Log.WARN, LOG_TAG, "VPN permission not granted. Starting UI.");
         Intent startIntent = new Intent(context, MainActivity.class);
         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(startIntent);
         return;
       }
-      // Delay start until after the remote configuration has been updated, or failed to update.
-      RemoteConfig.update().addOnCompleteListener(success -> controller.start(context));
+      // Start immediately. Do not wait for Firebase remote config (often fails at boot).
+      controller.start(context);
     }
   }
 }
