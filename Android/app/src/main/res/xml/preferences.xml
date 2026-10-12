@@ -4,6 +4,10 @@
             android:key="@string/server_choice_key"
             android:title="@string/server_choice"
             android:dialogTitle="@string/server_choice"/>
+    <Preference
+            android:key="parental_setup"
+            android:title="Set up for children"
+            android:summary="Set a PIN and open Always-on VPN / battery settings"/>
     <MultiSelectListPreference
             android:key="pref_apps"
             android:title="@string/excluded_apps"
