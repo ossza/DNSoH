@@ -45,6 +45,7 @@ public class PersistentState {
   private static final String APPROVED_KEY = "approved";
   private static final String ENABLED_KEY = "enabled";
   private static final String SERVER_KEY = "server";
+  private static final String PIN_KEY = "parental_pin";
 
   private static final String INTERNAL_STATE_NAME = "MainActivity";
 
@@ -68,6 +69,25 @@ public class PersistentState {
     SharedPreferences.Editor editor = getInternalState(context).edit();
     editor.putBoolean(ENABLED_KEY, enabled);
     editor.apply();
+  }
+
+  public static String getParentalPin(Context context) {
+    return getInternalState(context).getString(PIN_KEY, null);
+  }
+
+  public static void setParentalPin(Context context, String pin) {
+    SharedPreferences.Editor editor = getInternalState(context).edit();
+    if (pin == null || pin.isEmpty()) {
+      editor.remove(PIN_KEY);
+    } else {
+      editor.putString(PIN_KEY, pin);
+    }
+    editor.apply();
+  }
+
+  public static boolean hasParentalPin(Context context) {
+    String pin = getParentalPin(context);
+    return pin != null && !pin.isEmpty();
   }
 
   public static void syncLegacyState(Context context) {
