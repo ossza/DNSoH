@@ -222,13 +222,13 @@ public class MainActivity extends AppCompatActivity
           chooseView(R.id.settings);
           return true;
         } else if (itemId == R.id.support) {
-          openUrl("https://oss.co.za/support");
+          openUrl("https://portal.oss.co.za/static/dnshelp.html");
           return true;
         } else if (itemId == R.id.privacy) {
-          openUrl("https://oss.co.za/privacy");
+          openUrl("https://portal.oss.co.za/static/privacy.html");
           return true;
         } else if (itemId == R.id.tos) {
-          openUrl("https://oss.co.za/terms");
+          openUrl("https://portal.oss.co.za/static/terms.html");
           return true;
         }
         return false;
