@@ -15,12 +15,19 @@ limitations under the License.
 */
 package app.intra.ui.settings;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.InputType;
+import android.widget.EditText;
+import android.widget.Toast;
 import androidx.annotation.MainThread;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
@@ -104,6 +111,40 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       appPref.setEnabled(false);
       appPref.setSummary(R.string.old_android);
     }
+
+    Preference parental = findPreference("parental_setup");
+    if (parental != null) {
+      parental.setOnPreferenceClickListener(pref -> {
+        showParentalSetup();
+        return true;
+      });
+    }
+  }
+
+  private void showParentalSetup() {
+    EditText pinInput = new EditText(getContext());
+    pinInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+    pinInput.setHint("4-digit PIN (leave empty to clear)");
+    String existing = PersistentState.getParentalPin(getContext());
+    if (existing != null) pinInput.setText(existing);
+
+    new AlertDialog.Builder(getContext())
+        .setTitle("Set up for children")
+        .setMessage("Set a PIN so children cannot turn off Secure DNS. Then open system settings to enable Always-on VPN and ignore battery optimization.")
+        .setView(pinInput)
+        .setPositiveButton("Save PIN", (d, w) -> {
+          PersistentState.setParentalPin(getContext(), pinInput.getText().toString().trim());
+          Toast.makeText(getContext(), "PIN saved", Toast.LENGTH_SHORT).show();
+        })
+        .setNeutralButton("Always-on VPN", (d, w) -> {
+          startActivity(new Intent(Settings.ACTION_VPN_SETTINGS));
+        })
+        .setNegativeButton("Ignore battery", (d, w) -> {
+          Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+          intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+          startActivity(intent);
+        })
+        .show();
   }
 
   @Override
