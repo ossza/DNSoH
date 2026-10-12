@@ -40,30 +40,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/**
- * UI Fragment for displaying user preferences.
- * See https://developer.android.com/guide/topics/ui/settings#Fragment
- *
- * This class contains the special logic for the app exclusion setting, which does not require a
- * custom UI.  The server selection preference requires a custom UI, so it has its own class.
- */
-
 public class SettingsFragment extends PreferenceFragmentCompat {
   private static final String APPS_KEY = "apps";
 
-  // Acquiring the list of apps happens asynchronously.  To get the list of apps, use the
-  // getAppList() function, which will wait for the enumeration to complete if necessary.
   private AppEnumerationTask enumerator = null;
   private ArrayList<AppInfo> appList = null;
-
   private MultiSelectListPreference appPref = null;
 
-  /**
-   * Task representing enumeration of the installed apps.  This task populates |labels| and
-   * |packageNames| before completing.  Enumeration typically takes several seconds, so this task
-   * ensures that enumeration starts when the user opens Settings, but only blocks the UI when the
-   * user opens the Excluded Apps dialog.
-   */
   private static class AppEnumerationTask extends AsyncTask<PackageManager, Void,
       ArrayList<AppInfo>> {
     @Override
@@ -72,15 +55,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       List<ApplicationInfo> infos = pm.getInstalledApplications(0);
       ArrayList<AppInfo> entries = new ArrayList<>(infos.size());
       for (ApplicationInfo info : infos) {
-        if ("app.intra".equals(info.packageName)) {
-          // Showing ourselves in the list of apps would be confusing and useless.
-          continue;
-        }
-        if (pm.getLaunchIntentForPackage(info.packageName) == null) {
-          // This is not an app that can actually be launched, so it's confusing to show it.
-          continue;
-        }
-        // Calling loadLabel() can be very slow, because it needs to read into the APK.
+        if ("app.intra".equals(info.packageName)) continue;
+        if (pm.getLaunchIntentForPackage(info.packageName) == null) continue;
         entries.add(new AppInfo(info.loadLabel(pm).toString(), info.packageName));
       }
       Collections.sort(entries);
@@ -99,19 +75,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     if (savedInstanceState != null) {
-      // Restore the app list state.
       appList = savedInstanceState.getParcelableArrayList(APPS_KEY);
     }
-
-    // Load the preferences from an XML resource
     addPreferencesFromResource(R.xml.preferences);
     appPref = (MultiSelectListPreference)findPreference(PersistentState.APPS_KEY);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      // App exclusion relies on VpnService.Builder.addDisallowedApplication, which was added in L.
       appPref.setEnabled(false);
       appPref.setSummary(R.string.old_android);
     }
-
     Preference parental = findPreference("parental_setup");
     if (parental != null) {
       parental.setOnPreferenceClickListener(pref -> {
@@ -130,20 +101,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     new AlertDialog.Builder(getContext())
         .setTitle("Set up for children")
-        .setMessage("Set a PIN so children cannot turn off Secure DNS. Then open system settings to enable Always-on VPN and ignore battery optimization.")
+        .setMessage("1. Set a PIN below (optional).\n\n" +
+            "2. Keep the app ON.\n\n" +
+            "3. On Huawei: Phone Manager → App launch → OSS Secure DNS → Manual → enable Auto-launch, Secondary launch, Run in background.\n\n" +
+            "4. Optional: Settings → Network → VPN → gear next to OSS Secure DNS → Always-on VPN.")
         .setView(pinInput)
         .setPositiveButton("Save PIN", (d, w) -> {
           PersistentState.setParentalPin(getContext(), pinInput.getText().toString().trim());
           Toast.makeText(getContext(), "PIN saved", Toast.LENGTH_SHORT).show();
         })
-        .setNeutralButton("Always-on VPN", (d, w) -> {
-          startActivity(new Intent(Settings.ACTION_VPN_SETTINGS));
-        })
-        .setNegativeButton("Ignore battery", (d, w) -> {
+        .setNeutralButton("Ignore battery", (d, w) -> {
           Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
           intent.setData(Uri.parse("package:" + getContext().getPackageName()));
           startActivity(intent);
         })
+        .setNegativeButton("Close", null)
         .show();
   }
 
@@ -154,7 +126,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       dialogFragment.setTargetFragment(this, 0);
       dialogFragment.show(getFragmentManager(), null);
     } else {
-      // This is the app exclusion dialog.
       final ArrayList<AppInfo> appList = getAppList();
       if (appList != null) {
         String[] labels = new String[appList.size()];
@@ -164,42 +135,27 @@ public class SettingsFragment extends PreferenceFragmentCompat {
           labels[i] = entry.label;
           packageNames[i] = entry.packageName;
         }
-
         appPref.setEntries(labels);
         appPref.setEntryValues(packageNames);
       }
-
       super.onDisplayPreferenceDialog(preference);
     }
   }
 
-  /**
-   * Update this SettingsFragment's list of installed apps for the "Excluded apps" setting.  This
-   * method must be called before the fragment is displayed.
-   * @param pm The global PackageManager.
-   */
   @MainThread
   public void collectInstalledApps(PackageManager pm) {
     enumerator = new AppEnumerationTask();
     enumerator.execute(pm);
   }
 
-  /**
-   * Blocks until the app list is ready.
-   * @return The app list, or null if it could not be generated for any reason.
-   */
   @MainThread
   private ArrayList<AppInfo> getAppList() {
-    if (appList != null) {
-      return appList;
-    }
+    if (appList != null) return appList;
     if (enumerator != null) {
       try {
         appList = enumerator.get();
       } catch (InterruptedException e) {
-        // Thread was interrupted.  This is probably fine.
       } catch (ExecutionException e) {
-        // Something bad happened during the async task.
         LogWrapper.logException(e);
       }
     }
