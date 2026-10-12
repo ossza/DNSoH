@@ -100,11 +100,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     if (existing != null) pinInput.setText(existing);
 
     new AlertDialog.Builder(getContext())
-        .setTitle("Set up for children")
-        .setMessage("1. Set a PIN below (optional).\n\n" +
-            "2. Keep the app ON.\n\n" +
-            "3. On Huawei: Phone Manager → App launch → OSS Secure DNS → Manual → enable Auto-launch, Secondary launch, Run in background.\n\n" +
-            "4. Optional: Settings → Network → VPN → gear next to OSS Secure DNS → Always-on VPN.")
+        .setTitle("Control setup")
+        .setMessage("1. Set a PIN below so the service cannot be turned off without it.\n\n" +
+            "2. Leave Secure DNS ON. It restarts after reboot if the phone allows autostart.\n\n" +
+            "3. Tap Ignore battery so Android does not stop the service.\n\n" +
+            "4. Optional: Settings → Network → VPN → OSS Secure DNS → Always-on VPN.\n\n" +
+            "Some phones (Huawei, Xiaomi, Samsung) also need autostart allowed in the phone's app settings. See the help page.")
         .setView(pinInput)
         .setPositiveButton("Save PIN", (d, w) -> {
           PersistentState.setParentalPin(getContext(), pinInput.getText().toString().trim());
