@@ -13,14 +13,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OSS Secure DNS Path ID"
+        android:text="Secure DNS settings"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:paddingBottom="8dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter the 32-character path ID from your portal subscription, or the full URL."
+        android:text="Enter the 32-character path ID from your OSS Secure DNS Service Portal subscription, or the full URL of any DNSoH service."
         android:paddingBottom="8dp"/>
 
     <TextView

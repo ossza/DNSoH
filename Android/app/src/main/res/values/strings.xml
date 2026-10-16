@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" translatable="false">OSS Secure DNS</string>
+  <string name="app_name" translatable="false">Secure DNS</string>
 
   <!-- Intro text -->
   <string name="intro_benefit_headline" description="Headline for intro page describing key benefit">
@@ -7,7 +7,7 @@
   </string>
 
   <string name="intro_benefit_body" description="Body text for intro page describing key benefit">
-    OSS Secure DNS encrypts your DNS lookups and filters unwanted content.\n\nIt blocks pornographic sites, domains on published blocklists, and additional domains on the local OSS customer list.
+    Secure DNS encrypts your DNS lookups and filters unwanted content.\n\nIt blocks domains on published blocklists, pornographic sites, and additional domains managed on a local South African blocklist.
   </string>
 
   <string name="intro_manipulation_headline" description="Headline for intro page describing manipulation">
@@ -15,7 +15,7 @@
   </string>
 
   <string name="intro_manipulation_body" description="Body text for intro page describing manipulation">
-    Your DNS queries are sent to the OSS Secure DNS resolvers in South Africa.\n\nThis protects your lookups from being observed or modified on the network.
+    Your DNS queries are encrypted and sent over HTTPS.\n\nThis protects your lookups from being observed or modified on the network.
   </string>
 
   <string name="intro_details_headline" description="Headline for intro page describing permissions and privacy">
@@ -23,7 +23,7 @@
   </string>
 
   <string name="intro_details_body" description="Body text for intro page describing permissions and privacy">
-    Tap Accept to route your DNS queries through OSS Secure DNS. You will need an active subscription path ID from the customer portal.\n\nThis is a DNS-over-HTTPS service, not a VPN. DNS Traffic is protected.
+    Route your DNS queries through a Secure DNS service of your choice.\n\nRegister on the OSS Secure DNS Service Portal to be protected against sites on the blocklists.\n\nThis is a DNS-over-HTTPS service, not a VPN. DNS traffic is protected.
   </string>
 
   <string name="intro_back" description="Button label to see the previous page of introduction">
@@ -81,7 +81,7 @@
 
   <string name="credits_text"
           description="Credits to contributing parties.">
-    OSS Secure DNS client by <a href="https://oss.co.za">OSS Technologies</a>. Based on Intra (Apache 2.0).
+    Secure DNS client by <a href="https://oss.co.za">OSS Technologies</a>. Based on Intra (Apache 2.0).
   </string>
 
   <string name="indicator_on"
@@ -101,7 +101,7 @@
 
   <string name="explanation_exposed"
           description="Expanded form of status_exposed">
-    Your DNS queries are not protected. Enter your path ID in Settings.
+    Your DNS queries are not protected. Enter your path ID or URL in Settings.
   </string>
 
   <string name="status_protected"
@@ -110,11 +110,11 @@
   </string>
 
   <string name="status_not_configured">Not configured</string>
-  <string name="explanation_not_configured">Enter your path ID in Settings to activate OSS Secure DNS.</string>
+  <string name="explanation_not_configured">Enter your path ID or URL in Settings to activate Secure DNS.</string>
 
   <string name="explanation_protected"
           description="Expanded form of status_protected">
-    Your DNS queries are protected by OSS Secure DNS.
+    Your DNS queries are protected.
   </string>
 
   <string name="status_upgraded"
@@ -145,7 +145,7 @@
 
   <string name="explanation_starting"
           description="Corresponds to status_starting">
-    Connecting to OSS Secure DNS.
+    Connecting to Secure DNS.
   </string>
 
   <string name="status_waiting"
@@ -165,11 +165,11 @@
 
   <string name="explanation_vpn"
           description="Warning text shown on the main screen before the user starts Intra">
-    Another DNS or VPN service is active. Enabling OSS Secure DNS will take over DNS routing.
+    Another DNS or VPN service is active. Enabling Secure DNS will take over DNS routing.
   </string>
 
   <string name="explanation_failing">
-    Warning: Queries are failing. Check your path ID or network connection.
+    Warning: Queries are failing. Check your path ID, URL or network connection.
   </string>
 
   <string name="system_details"
@@ -188,8 +188,8 @@
   </string>
 
   <string name="num_requests_body">
-    This value shows the total number of DNS queries that your device has performed while OSS Secure DNS was
-    active. Queries are encrypted and sent to the OSS resolver.
+    This value shows the total number of DNS queries that your device has performed while Secure DNS was
+    active. Queries are encrypted and sent to the configured resolver.
   </string>
 
   <string name="queries_per_minute"
@@ -217,7 +217,7 @@
   </string>
 
   <string name="transport_body">
-    When you use OSS Secure DNS, your DNS queries are encrypted, so that only you and the OSS resolver can see
+    When you use Secure DNS, your DNS queries are encrypted, so that only you and the resolver can see
     what DNS queries you are making. This uses the DNS over HTTPS protocol.
   </string>
 
@@ -251,11 +251,11 @@
   </string>
 
   <string name="server_headline">
-    OSS Secure DNS
+    Secure DNS
   </string>
 
   <string name="server_body">
-    This field shows the OSS Secure DNS server you are using. Your path ID is configured in Settings.
+    This field shows the Secure DNS server you are using. Your path ID or URL is configured in Settings.
   </string>
 
   <string name="default_server_label"
@@ -268,7 +268,7 @@
   </string>
 
   <string name="insecure_server_body">
-    When OSS Secure DNS is disabled, your device uses the DNS server chosen by your network.
+    When Secure DNS is disabled, your device uses the DNS server chosen by your network.
   </string>
 
   <string name="strict_mode_server_headline">
@@ -335,7 +335,7 @@
   </string>
 
   <string name="server_choice_builtin" description="Label for option to select from a short list of servers. [CHAR_LIMIT=NONE]">
-    OSS Secure DNS
+    Secure DNS
   </string>
 
   <string name="server_choice_website_notice" description="Warning text about a DNS server, with a hyperlink. [CHAR_LIMIT=NONE]">
@@ -355,11 +355,11 @@
   </string>
 
   <string name="found_fastest" description="Template for success indication, shown when the fastest server for you is found. [CHAR_LIMIT=NONE]">
-    Connected to <xliff:g example="OSS Secure DNS">%s</xliff:g>.
+    Connected to <xliff:g example="Secure DNS">%s</xliff:g>.
   </string>
 
   <string name="all_servers_failed" description="Notification shown briefly if all known servers were unreachable. [CHAR_LIMIT=NONE]">
-    Could not reach OSS Secure DNS. Check your path ID and network.
+    Could not reach the Secure DNS server. Check your path ID, URL and network.
   </string>
 
   <string name="server_choice_custom"
@@ -379,7 +379,7 @@
 
   <string name="excluded_apps_summary"
           description="Summary of how the Excluded apps' setting works">
-    DNS queries from any selected apps will not go through OSS Secure DNS.
+    DNS queries from any selected apps will not go through Secure DNS.
   </string>
 
   <string name="excluded_apps_title"
@@ -394,7 +394,7 @@
 
   <string name="notification_title"
           description="Status indicator text shown in a persistent notification.">
-    OSS Secure DNS is active
+    Secure DNS is active
   </string>
 
   <string name="notification_content"
@@ -408,11 +408,11 @@
     Secure DNS Active Notification
   </string>
   <string name="channel_description">
-    This notification appears while OSS Secure DNS is active.
+    This notification appears while Secure DNS is active.
   </string>
 
   <string name="warning_title" description="Status indicator text shown in a warning notification.">
-    Warning: OSS Secure DNS has been deactivated
+    Warning: Secure DNS has been deactivated
   </string>
 
   <string name="warning_channel_name"
@@ -423,6 +423,6 @@
   <string name="warning_channel_description"
           description="This is the explanatory text describing the 'Warning' notification class.  It's
   only visible in the system's advanced notifications settings page.">
-    Shown when OSS Secure DNS has encountered a problem.
+    Shown when Secure DNS has encountered a problem.
   </string>
 </resources>
