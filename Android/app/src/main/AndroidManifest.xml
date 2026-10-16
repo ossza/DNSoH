@@ -29,10 +29,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="app.intra.ui.settings.PortalLoginActivity"
-            android:exported="false"
-            android:label="Portal Login"/>
-
         <service
             android:name="app.intra.sys.IntraVpnService"
             android:exported="false"

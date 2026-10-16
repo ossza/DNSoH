@@ -15,9 +15,7 @@ limitations under the License.
 */
 package app.intra.ui.settings;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -33,8 +31,6 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceDialogFragmentCompat;
 import app.intra.R;
@@ -65,19 +61,6 @@ public class ServerChooserFragment extends PreferenceDialogFragmentCompat
     private String[] urls = null;
     private String[] descriptions = null;
     private String[] websiteLinks = null;
-
-    private final ActivityResultLauncher<Intent> portalLauncher =
-        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-          if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-            String pathId = result.getData().getStringExtra(PortalLoginActivity.EXTRA_PATH_ID);
-            if (pathId != null && !pathId.isEmpty()) {
-              // Fill as full DoH URL
-              String url = "https://dns1.oss.co.za/" + pathId;
-              customServerUrl.setText(url);
-              buttons.check(R.id.pref_server_custom);
-            }
-          }
-        });
 
     static ServerChooserFragment newInstance(String key) {
         final ServerChooserFragment fragment = new ServerChooserFragment();
@@ -227,15 +210,6 @@ public class ServerChooserFragment extends PreferenceDialogFragmentCompat
         spinner.setOnItemSelectedListener(this);
         customServerUrl.addTextChangedListener(this);
         customServerUrl.setOnEditorActionListener(this);
-
-        // Portal login button
-        Button portalButton = view.findViewById(R.id.portal_login_button);
-        if (portalButton != null) {
-          portalButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), PortalLoginActivity.class);
-            portalLauncher.launch(intent);
-          });
-        }
 
         updateUI();
     }

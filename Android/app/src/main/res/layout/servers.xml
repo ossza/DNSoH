@@ -21,7 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enter the 32-character path ID from your portal subscription, or the full URL."
-        android:paddingBottom="12dp"/>
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="To get a path ID, visit portal.oss.co.za in your browser, register and subscribe."
+        android:paddingBottom="12dp"
+        android:textStyle="italic"/>
 
     <!-- Hidden radio group so existing Java still finds the IDs -->
     <RadioGroup
@@ -75,13 +82,6 @@
         android:text="@string/server_choice_warning"
         android:textColor="@color/accent_bad"
         android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/portal_login_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Log into portal for path ID"/>
 
   </LinearLayout>
 </ScrollView>

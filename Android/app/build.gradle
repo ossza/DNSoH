@@ -51,7 +51,7 @@ android {
     buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId "app.intra"
+        applicationId "za.co.oss.securedns"
         // Firebase Crashlytics requires SDK version 16.
         minSdkVersion ANDROID_MIN_SDK_VERSION as int
         targetSdkVersion ANDROID_TARGET_SDK_VERSION as int
